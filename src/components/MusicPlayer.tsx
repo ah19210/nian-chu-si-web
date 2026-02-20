@@ -9,10 +9,16 @@ export default function MusicPlayer() {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const togglePlay = () => {
-    // TODO: 需要添加音頻文件 gongxi-facai.mp3 到 public 目錄
-    // 劉德華《恭喜發財》為版權音樂，需用戶自行提供合法音頻文件
-    alert('🎵 請將《恭喜發財》音頻文件（gongxi-facai.mp3）放入 public 目錄');
-    setIsPlaying(!isPlaying);
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(() => {
+          alert('請點擊播放按鈕開始播放音樂 🎵');
+        });
+      }
+      setIsPlaying(!isPlaying);
+    }
   };
 
   // Note: In production, you would need an actual audio file
