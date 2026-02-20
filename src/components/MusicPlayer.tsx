@@ -8,6 +8,31 @@ export default function MusicPlayer() {
   const [showControl, setShowControl] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // 自动播放：用户第一次点击页面后播放音乐
+  useEffect(() => {
+    const autoPlay = () => {
+      if (audioRef.current && !isPlaying) {
+        audioRef.current.play()
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch(() => {
+            // 如果自动播放失败，静默处理
+          });
+        // 移除监听器，只触发一次
+        document.removeEventListener('click', autoPlay);
+      }
+    };
+
+    // 监听用户第一次点击
+    document.addEventListener('click', autoPlay);
+
+    // 清理监听器
+    return () => {
+      document.removeEventListener('click', autoPlay);
+    };
+  }, [isPlaying]);
+
   const togglePlay = () => {
     if (audioRef.current) {
       if (isPlaying) {
